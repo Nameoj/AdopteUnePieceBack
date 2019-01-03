@@ -1,20 +1,31 @@
 package fr.adopteunepiece.adope_une_piece.entities;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
-@Table(name="buyer")
-public class Buyer {
+@Table(name="user")
+public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private long id;
+	private Long id;
 	@Column(name = "email")
 	private String email;
+	@Column(name = "username")
+	private String username;
 	@Column(name = "password")
 	private String password;
 	@Column(name="civilite")
@@ -36,12 +47,19 @@ public class Buyer {
 	@Column(name = "active")
 	private Boolean active;
 	
-	public Buyer () {}
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "user_roles", 
+    	joinColumns = @JoinColumn(name = "user_id"), 
+    	inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles = new HashSet<>();
+	
+	public User () {}
 
-	public Buyer(String email, String password, String civilite, String prenom, String nom, String telephone, String adresse1,
+	public User(String email, String password, String username, String civilite, String prenom, String nom, String telephone, String adresse1,
 			String adresse2, String codepostal, String ville, Boolean active) {
 		this.email = email;
 		this.password = password;
+		this.username = username;
 		this.civilite = civilite;
 		this.prenom = prenom;
 		this.nom = nom;
@@ -59,10 +77,10 @@ public class Buyer {
 	public void setCivilite(String civilite) {
 		this.civilite = civilite;
 	}
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 	public String getEmail() {
@@ -76,6 +94,12 @@ public class Buyer {
 	}
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	public String getUsername() {
+		return username;
+	}
+	public void setUsername(String username) {
+		this.username = username;
 	}
 	public String getPrenom() {
 		return prenom;
@@ -125,6 +149,13 @@ public class Buyer {
 	public void setActive(Boolean active) {
 		this.active = active;
 	}
+    public Set<Role> getRoles() {
+        return roles;
+    }
+ 
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
 	@Override
 	public String toString() {
 		return "Buyer [id=" + id + ", email=" + email + ", civilite=" + civilite +  ", password=" + password + ", prenom=" + prenom + ", nom=" + nom
