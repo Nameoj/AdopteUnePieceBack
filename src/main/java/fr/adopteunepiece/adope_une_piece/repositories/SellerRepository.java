@@ -5,13 +5,14 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import fr.adopteunepiece.adope_une_piece.entities.User;
+import fr.adopteunepiece.adope_une_piece.entities.Seller;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface SellerRepository extends JpaRepository<Seller, Long> {
 
-    Optional<User> findByUsername(String username);
+	Seller findByEmail(String email);
+    Optional<Seller> findByUsername(String username);
     Boolean existsByUsername(String username);
-  
+    Boolean existsByEmail(String email);
 
 }

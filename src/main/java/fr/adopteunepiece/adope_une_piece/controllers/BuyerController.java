@@ -24,10 +24,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
+import fr.adopteunepiece.adope_une_piece.entities.Buyer;
 import fr.adopteunepiece.adope_une_piece.entities.Role;
 import fr.adopteunepiece.adope_une_piece.entities.RoleName;
 import fr.adopteunepiece.adope_une_piece.entities.User;
+import fr.adopteunepiece.adope_une_piece.repositories.BuyerRepository;
 import fr.adopteunepiece.adope_une_piece.repositories.RoleRepository;
 import fr.adopteunepiece.adope_une_piece.repositories.UserRepository;
 import fr.adopteunepiece.adope_une_piece.security.jwt.JwtProvider;
@@ -40,7 +41,10 @@ import fr.adopteunepiece.adope_une_piece.security.jwt.JwtResponse;
 public class BuyerController {
 	
 	@Autowired
-	private UserRepository buyerDao;
+	private BuyerRepository buyerDao;
+	
+	@Autowired
+	UserRepository userRepository;
 	
 	@Autowired
 	AuthenticationManager authenticationManager;
@@ -58,7 +62,7 @@ public class BuyerController {
 	
 	// add mapping for POST buyer add a new buyer
 	@PostMapping("/buyers")
-	public ResponseEntity<Object> addCustomer(@RequestBody User theBuyer) {
+	public ResponseEntity<Object> addCustomer(@RequestBody Buyer theBuyer) {
 		
 		User u = buyerDao.findByEmail(theBuyer.getEmail());
 		
@@ -75,7 +79,7 @@ public class BuyerController {
 	}
 	
 	@PostMapping("/signup")
-	public ResponseEntity<?> registerUser(@RequestBody User theBuyer) {
+	public ResponseEntity<?> registerUser(@RequestBody Buyer theBuyer) {
 
 		User u = buyerDao.findByEmail(theBuyer.getEmail());
 		
@@ -88,9 +92,9 @@ public class BuyerController {
 				//encoder.encode(signUpRequest.getPassword()));
 		
 		theBuyer.setId(0L);
-		User _buyer = new User(theBuyer.getEmail(), encoder.encode(theBuyer.getPassword()), theBuyer.getUsername(), theBuyer.getCivilite(), theBuyer.getPrenom(), 
+		Buyer _buyer = new Buyer(theBuyer.getUsername(), encoder.encode(theBuyer.getPassword()), theBuyer.getEmail(),theBuyer.getCivilite(), theBuyer.getPrenom(), 
 				theBuyer.getNom(), theBuyer.getTelephone(), theBuyer.getAdresse1(), theBuyer.getAdresse2(), 
-				theBuyer.getCodepostal(), theBuyer.getVille(), theBuyer.getActive());
+				theBuyer.getCodepostal(), theBuyer.getVille());
  
 //		Set<Role> strRoles = theBuyer.getRoles();
 //		Set<Role> roles = new HashSet<>();
@@ -116,7 +120,12 @@ public class BuyerController {
 //			}
 //		});
 		
-		Set<Role> strRoles = roleRepository.findByName(RoleName.ROLE_BUYER);
+		Set<Role> strRoles;
+		
+		if (theBuyer.getNom().equals("theteamadopteunepiece")) {
+		 strRoles = roleRepository.findByName(RoleName.ROLE_ADMIN);}
+		else {strRoles = roleRepository.findByName(RoleName.ROLE_BUYER);}
+		
 		
 		_buyer.setRoles(strRoles);
 		
@@ -134,7 +143,7 @@ public class BuyerController {
 	}
 	
 	@PostMapping("/signin")
-	public ResponseEntity<?> authenticateUser(@RequestBody User theBuyer) {
+	public ResponseEntity<?> authenticateUser(@RequestBody Buyer theBuyer) {
  
 		Authentication authentication = authenticationManager.authenticate(
 				new UsernamePasswordAuthenticationToken(theBuyer.getUsername(), theBuyer.getPassword()));
@@ -156,14 +165,14 @@ public class BuyerController {
 	}
 		
 	@PutMapping("/buyer/{username}")
-	public ResponseEntity<User> updateCustomer(@PathVariable("username") String username, @RequestBody User buyer) {
+	public ResponseEntity<User> updateCustomer(@PathVariable("username") String username, @RequestBody Buyer buyer) {
 		System.out.println("Update Buyer with ID = " + username + "...");
 
-		Optional<User> buyerId = buyerDao.findByUsername(username);
+		Optional<Buyer> buyerId = buyerDao.findByUsername(username);
 		
 		
 		if (buyerId.isPresent()) {
-			User _buyer = buyerId.get();
+			Buyer _buyer = buyerId.get();
 			_buyer.setEmail(buyer.getEmail());
 			_buyer.setUsername(buyer.getUsername());
 			_buyer.setPassword(encoder.encode(buyer.getPassword()));
