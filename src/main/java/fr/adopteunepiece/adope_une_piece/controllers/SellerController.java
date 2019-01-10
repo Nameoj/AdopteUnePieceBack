@@ -2,6 +2,7 @@ package fr.adopteunepiece.adope_une_piece.controllers;
 
 
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -39,7 +40,7 @@ import fr.adopteunepiece.adope_une_piece.security.jwt.JwtResponse;
 
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
-@RequestMapping("/api/")
+@RequestMapping("/api")
 public class SellerController {
 	
 	@Autowired
@@ -85,6 +86,11 @@ public class SellerController {
 		sellerDao.save(_seller);
  
 		return new ResponseEntity<>(_seller, HttpStatus.OK);
-	}	
+	}
+	
+	@GetMapping("/sellers")
+	public List<Seller> getAllSellers() {
+		return sellerDao.findAll();
+	}
 	
 }
