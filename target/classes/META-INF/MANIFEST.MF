@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
+Built-By: perticoz
+Build-Jdk: 10.0.2
 Implementation-Title: adope_une_piece
 Implementation-Version: 0.0.1-SNAPSHOT
-Built-By: Aymeric
 Implementation-Vendor-Id: fr.adopteunepiece
-Build-Jdk: 1.8.0_191
 Implementation-URL: https://projects.spring.io/spring-boot/#/spring-bo
  ot-starter-parent/adope_une_piece
 Created-By: Maven Integration for Eclipse

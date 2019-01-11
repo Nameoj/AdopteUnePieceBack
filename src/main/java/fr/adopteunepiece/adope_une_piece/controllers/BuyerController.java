@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import fr.adopteunepiece.adope_une_piece.entities.Buyer;
@@ -37,7 +38,7 @@ import fr.adopteunepiece.adope_une_piece.security.jwt.JwtProvider;
 import fr.adopteunepiece.adope_une_piece.security.jwt.JwtResponse;
 
 
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "http://localhost:4200", methods = {RequestMethod.DELETE, RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT})
 @RestController
 @RequestMapping("/api")
 public class BuyerController {
@@ -206,5 +207,17 @@ public class BuyerController {
 		} else {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
+	}
+	
+	@GetMapping("/deletebuyer/{username}")
+	public ResponseEntity<Buyer> getDeleteBuyer(@PathVariable("username") String username){
+	
+		Buyer deleteBuyer = buyerDao.findByEmail(username);
+		
+		deleteBuyer.setActive(false);
+		
+		System.out.println(deleteBuyer);
+		
+		return new ResponseEntity<>(buyerDao.save(deleteBuyer), HttpStatus.OK);
 	}
 }
