@@ -2,6 +2,8 @@ package fr.adopteunepiece.adope_une_piece.controllers;
 
 
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -60,8 +62,23 @@ public class BuyerController {
 	
 	Map<String, String> errors;
 	
+	@GetMapping("/buyers")
+	public List<Buyer> getAllBuyers(){ 
+
+	List<Buyer> listBuyersValide = new ArrayList<Buyer>();
+
+	List<Buyer> listBuyers = buyerDao.findAll();
+
+	for(Buyer buyer : listBuyers) {
+		if (buyer.getActive()== true) {
+			listBuyersValide.add(buyer);
+			}
+		}
+		return listBuyersValide;
+	}
+	
 	// add mapping for POST buyer add a new buyer
-	@PostMapping("/buyers")
+	@PostMapping("/buyer")
 	public ResponseEntity<Object> addCustomer(@RequestBody Buyer theBuyer) {
 		
 		User u = buyerDao.findByEmail(theBuyer.getEmail());
