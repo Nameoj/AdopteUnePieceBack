@@ -1,8 +1,16 @@
 package fr.adopteunepiece.adope_une_piece.controllers;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,13 +27,65 @@ public class AnnounceController {
 	private AnnounceDao announceDao;
 	
 	// add mapping for POST custommer add a new customer
-	@PostMapping("/announces-pro")
-	public Announce addCostomer(@RequestBody Announce theAnnounce) {
+	@PostMapping("/announces/postAnnounce")
+	public Announce addAnnounce(@RequestBody Announce theAnnounce) {
 	
 	theAnnounce.setId(0);
-	Announce _announce = announceDao.save(new Announce(theAnnounce.getTitle(), theAnnounce.getSeller(), theAnnounce.getImage(), 
-			theAnnounce.getDescription(), theAnnounce.getNote(), theAnnounce.getPostDate(), theAnnounce.getPrice()));
+	Announce _announce = announceDao.save(new Announce(theAnnounce.getSeller(), theAnnounce.getImage(), 
+			theAnnounce.getDescription(), theAnnounce.getNote(), theAnnounce.getPostDate(), theAnnounce.getPrice(), theAnnounce.getCharge(),
+			theAnnounce.getPieceName(), theAnnounce.getModel(), theAnnounce.getYear(), theAnnounce.getBrand(), theAnnounce.getCylinder()));
 		return  _announce;
 	}
+	
+	@PutMapping("/announces/{id}")
+	public ResponseEntity<Object> updateAnnounce(@PathVariable("id") Long id) {
+		System.out.println("Update Announce with ID = " + id + "...");
 
+		Optional<Announce> announceId = this.announceDao.findById(id);
+		
+		
+		if (announceId.isPresent()) {
+			Announce _announce = announceId.get();
+			_announce.setSeller(_announce.getSeller());
+			_announce.setImage(_announce.getImage());
+			_announce.setDescription(_announce.getDescription());
+			_announce.setNote(_announce.getNote());
+			_announce.setPostDate(_announce.getPostDate());
+			_announce.setPrice(_announce.getPrice());
+			_announce.setCharge(_announce.getCharge());
+			_announce.setPieceName(_announce.getPieceName());
+			_announce.setModel(_announce.getModel());
+			_announce.setYear(_announce.getYear());
+			_announce.setBrand(_announce.getBrand());
+			_announce.setCylinder(_announce.getCylinder());
+			return new ResponseEntity<>(announceDao.save(_announce), HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+	}
+
+	@GetMapping("/announces/all")
+	public List<Announce> allAnnounces(){
+		List<Announce> allAnnounces=this.announceDao.findAll();
+		return allAnnounces;
+	}
+	
+	@GetMapping("/announces/id/{id}")
+	public Announce oneAnnounce(@PathVariable("id") Long id) {
+		return this.announceDao.findById(id).get();
+	}
+	
+	@GetMapping("/announces/delete/{id}")
+	public void deleteAnnounce(@PathVariable("id") Long id) {
+		Announce _announce=this.announceDao.findById(id).get();
+		_announce.setActive(false);
+		announceDao.save(_announce);
+	}
+	
+	@GetMapping("/announces/seller/{seller}")
+	public List<Announce> announcesBySeller(@PathVariable("seller") String seller){
+		List<Announce> announcesBySeller=this.announceDao.findBySeller(seller);
+		return announcesBySeller;
+	}
+	
 }
