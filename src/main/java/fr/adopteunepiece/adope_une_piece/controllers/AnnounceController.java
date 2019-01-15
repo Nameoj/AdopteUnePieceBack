@@ -64,7 +64,7 @@ public class AnnounceController {
 		}
 	}
 
-	@GetMapping("/announces/all")
+	@GetMapping("/announces")
 	public List<Announce> allAnnounces(){
 		List<Announce> allAnnounces=this.announceDao.findAll();
 		return allAnnounces;
