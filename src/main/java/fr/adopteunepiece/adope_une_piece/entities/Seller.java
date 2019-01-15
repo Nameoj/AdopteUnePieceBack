@@ -14,8 +14,6 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 @Entity
 @Table(name="seller")
 public class Seller extends User {
@@ -28,7 +26,7 @@ public class Seller extends User {
 	@Column(name = "adresse2")
 	private String adresse2;
 	@Column(name = "codepostal")
-	private String codepostal;
+	private String codePostal;
 	@Column(name = "ville")
 	private String ville;
 	@Column(name = "telephone")
@@ -49,14 +47,14 @@ public class Seller extends User {
 	
 	public Seller () {}
 
-	public Seller(String username, String password, String raisonSociale, String adresse1, String adresse2, String codepostal, String ville,
+	public Seller(String username, String password, String raisonSociale, String adresse1, String adresse2, String codePostal, String ville,
 			String telephone, String siren, String email,  String nomG, String prenomG,
 			String telephoneG) {
 		super(username, password);
 		this.raisonSociale = raisonSociale;
 		this.adresse1 = adresse1;
 		this.adresse2 = adresse2;
-		this.codepostal = codepostal;
+		this.codePostal = codePostal;
 		this.ville = ville;
 		this.telephone = telephone;
 		this.siren = siren;
@@ -99,12 +97,12 @@ public class Seller extends User {
 		this.adresse2 = adresse2;
 	}
 
-	public String getCodepostal() {
-		return codepostal;
+	public String getCodePostal() {
+		return codePostal;
 	}
 
-	public void setCodepostal(String codepostal) {
-		this.codepostal = codepostal;
+	public void setCodePostal(String codePostal) {
+		this.codePostal = codePostal;
 	}
 
 	public String getVille() {
