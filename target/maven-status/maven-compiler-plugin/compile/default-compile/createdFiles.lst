@@ -1,0 +1,9 @@
+fr/adopteunepiece/adope_une_piece/controllers/ModelController.class
+fr/adopteunepiece/adope_une_piece/controllers/BrandController.class
+fr/adopteunepiece/adope_une_piece/repositories/MotoYearRepository.class
+fr/adopteunepiece/adope_une_piece/controllers/CylinderController.class
+fr/adopteunepiece/adope_une_piece/entities/MotoBrand.class
+fr/adopteunepiece/adope_une_piece/controllers/YearController.class
+fr/adopteunepiece/adope_une_piece/repositories/MotoCylinderRepository.class
+fr/adopteunepiece/adope_une_piece/repositories/MotoModelRepository.class
+fr/adopteunepiece/adope_une_piece/repositories/MotoBrandRepository.class
