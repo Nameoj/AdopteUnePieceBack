@@ -1,5 +1,6 @@
 package fr.adopteunepiece.adope_une_piece.controllers;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 import fr.adopteunepiece.adope_une_piece.entities.Role;
 import fr.adopteunepiece.adope_une_piece.entities.RoleName;
 import fr.adopteunepiece.adope_une_piece.entities.Seller;
@@ -79,7 +81,17 @@ public class SellerController {
 	
 	@GetMapping("/sellers")
 	public List<Seller> getAllSellers() {
-		return sellerDao.findAll();
+		
+		List<Seller> listSellersValide = new ArrayList<Seller>();
+
+		List<Seller> listSellers = sellerDao.findAll();
+		
+		for(Seller seller : listSellers) {
+			if (seller.getActive()== true) {
+				listSellersValide.add(seller);
+				}
+			}
+			return listSellersValide;
 	}
 	
 	@GetMapping("/seller/{username}")
@@ -133,5 +145,17 @@ public class SellerController {
 		} else {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
+	}
+	
+	@GetMapping("/deleteseller/{username}")
+	public ResponseEntity<Seller> getDeleteSeller(@PathVariable("username") String username){
+	
+		Seller deleteSeller = sellerDao.findByEmail(username);
+		
+		deleteSeller.setActive(false);
+		
+		System.out.println(deleteSeller);
+		
+		return new ResponseEntity<>(sellerDao.save(deleteSeller), HttpStatus.OK);
 	}
 }
