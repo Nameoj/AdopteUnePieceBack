@@ -12,6 +12,8 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 @Entity
 @Table(name="motoBrand")
@@ -35,7 +37,6 @@ public class MotoBrand {
 	
 	public MotoBrand(@NotEmpty String name) {
 		this.name = name;
-		this.motoModels = new ArrayList<>();
 	}
 
 	public String getName() {

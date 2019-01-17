@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import fr.adopteunepiece.adope_une_piece.entities.MotoBrand;
-import fr.adopteunepiece.adope_une_piece.entities.MotoCylinder;
 import fr.adopteunepiece.adope_une_piece.entities.MotoModel;
 import fr.adopteunepiece.adope_une_piece.repositories.MotoModelRepository;
 
@@ -26,27 +25,25 @@ public class ModelController {
 	@Autowired
 	MotoModelRepository modelRepository;
 	
-	@PostMapping("/postmodel")
+	@PostMapping("/post")
 	public MotoModel addModel(@RequestBody MotoModel theModel) {
-		Set<MotoCylinder> cylinders = theModel.getMotoCylinders();
-		if (cylinders == null) cylinders = new HashSet<>();
-		MotoModel _models=modelRepository.save(new MotoModel(theModel.getModelName(), theModel.getMotoBrand(), cylinders));
+		MotoModel _models=modelRepository.save(new MotoModel(theModel.getModelName(), theModel.getMotoBrand(), theModel.getMotoModelInfo()));
 		return _models;
 	}
 	
-	@GetMapping("/allmodels")
-	public List<MotoModel> allBrands(){
+	@GetMapping("/get/all")
+	public List<MotoModel> allModels(){
 		List<MotoModel> allModels = this.modelRepository.findAll();
 		return allModels;
 	}
 	
-	@PutMapping("/{modelName}")
-	public MotoModel updateCylinder(@PathVariable("modelName") String modelName, @RequestBody MotoModel motoModel) {
+	@PutMapping("/put/{modelName}")
+	public MotoModel updateModel(@PathVariable("modelName") String modelName, @RequestBody MotoModel motoModel) {
 		MotoModel _motoModel = modelRepository.findById(modelName).get();
 		
 		_motoModel.setModelName(motoModel.getModelName());
 		_motoModel.setMotoBrand(motoModel.getMotoBrand());
-		_motoModel.setMotoCylinders(motoModel.getMotoCylinders());
+		_motoModel.setMotoModelInfo(motoModel.getMotoModelInfo());
 		
 		return modelRepository.save(_motoModel);
 	}

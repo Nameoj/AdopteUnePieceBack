@@ -13,6 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 
@@ -29,55 +30,46 @@ public class MotoModel {
 	private String modelName;
 	@ManyToOne
 	@JoinColumn(name="motoBrand")
-	@JsonProperty(access = Access.WRITE_ONLY)
+	@JsonProperty(access=Access.WRITE_ONLY)
 	private MotoBrand motoBrand; 
-	
-	
-	@ManyToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY)
-	@JoinTable(name="MOTOMODEL_MOTOCYLINDER", 
-		joinColumns= {
-				@JoinColumn(name="MOTOMODEL_MODELNAME", referencedColumnName="modelName")},
-		inverseJoinColumns = {
-				@JoinColumn(name="MOTOCYLINDER_CYLINDERNAME", referencedColumnName="cylinderName")
-		})
-	private Set<MotoCylinder> motoCylinders;
-	
+	@Column(name="modelInfo")
+	@OneToMany(mappedBy="motoModel", cascade=CascadeType.ALL)
+	private Set<MotoModelInfo> motoModelInfo;
 	public MotoModel() {
 	}
-	
+	public MotoModel(@NotEmpty String modelName, MotoBrand motoBrand, Set<MotoModelInfo> motoModelInfo) {
+		this.modelName = modelName;
+		this.motoBrand = motoBrand;
+		this.motoModelInfo = motoModelInfo;
+	}
+	public MotoModel(@NotEmpty String modelName, MotoBrand motoBrand) {
+		this.modelName = modelName;
+		this.motoBrand = motoBrand;
+	}
 	public MotoModel(@NotEmpty String modelName) {
 		this.modelName = modelName;
 	}
-
-	public MotoModel(@NotEmpty String modelName, MotoBrand motoBrand, Set<MotoCylinder> motoCylinders) {
-		this.modelName = modelName;
-		this.motoBrand = motoBrand;
-		this.motoCylinders = motoCylinders;
-	}
-
+	
+	
 	public String getModelName() {
 		return modelName;
 	}
-
 	public void setModelName(String modelName) {
 		this.modelName = modelName;
 	}
-
 	public MotoBrand getMotoBrand() {
 		return motoBrand;
 	}
-
 	public void setMotoBrand(MotoBrand motoBrand) {
 		this.motoBrand = motoBrand;
 	}
-
-	public Set<MotoCylinder> getMotoCylinders() {
-		return motoCylinders;
+	public Set<MotoModelInfo> getMotoModelInfo() {
+		return motoModelInfo;
 	}
-
-	public void setMotoCylinders(Set<MotoCylinder> motoCylinders) {
-		this.motoCylinders = motoCylinders;
+	public void setMotoModelInfo(Set<MotoModelInfo> motoModelInfo) {
+		this.motoModelInfo = motoModelInfo;
 	}
+	
 	
 	
 	

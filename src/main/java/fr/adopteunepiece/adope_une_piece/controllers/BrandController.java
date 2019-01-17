@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,7 +23,7 @@ public class BrandController {
 	@Autowired
 	MotoBrandRepository brandRepository;
 	
-	@PostMapping("/postbrand")
+	@PostMapping("/post")
 	public MotoBrand addBrand(@RequestBody MotoBrand theBrand) {
 		List<MotoModel> models = theBrand.getMotoModels();
 		if (models == null) models = new ArrayList<>();
@@ -30,13 +31,23 @@ public class BrandController {
 		return _brand;
 	}
 	
-	@GetMapping("/allbrands")
+	@PutMapping("/put/{name}")
+	public MotoBrand updateBrand(@PathVariable("name") String name, @RequestBody MotoBrand motoBrand) {
+		MotoBrand _motoBrand = brandRepository.findById(name).get();
+		
+		_motoBrand.setMotoModels(motoBrand.getMotoModels());
+		_motoBrand.setName(name);
+		
+		return brandRepository.save(_motoBrand);
+	}
+	
+	@GetMapping("/get/all")
 	public List<MotoBrand> allBrands(){
 		List<MotoBrand> allBrands = this.brandRepository.findAll();
 		return allBrands;
 	}
 	
-	@GetMapping("/{name}")
+	@GetMapping("/get/{name}")
 	public MotoBrand oneBrand(@PathVariable("name") String name) {
 		return brandRepository.findById(name).get();
 	}
