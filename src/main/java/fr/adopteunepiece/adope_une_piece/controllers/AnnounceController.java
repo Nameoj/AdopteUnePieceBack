@@ -16,7 +16,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import fr.adopteunepiece.adope_une_piece.entities.Announce;
+import fr.adopteunepiece.adope_une_piece.entities.Seller;
 import fr.adopteunepiece.adope_une_piece.repositories.AnnounceDao;
+import fr.adopteunepiece.adope_une_piece.repositories.BuyerRepository;
+import fr.adopteunepiece.adope_une_piece.repositories.SellerRepository;
 
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
@@ -26,14 +29,26 @@ public class AnnounceController {
 	@Autowired
 	private AnnounceDao announceDao;
 	
+	@Autowired
+	private SellerRepository sellerDao;
+	
 	// add mapping for POST custommer add a new customer
 	@PostMapping("/announces/postAnnounce")
 	public Announce addAnnounce(@RequestBody Announce theAnnounce) {
 	
+	Seller seller = sellerDao.findByEmail(theAnnounce.getSeller());
+	
 	theAnnounce.setId(0);
-	Announce _announce = announceDao.save(new Announce(theAnnounce.getSeller(), theAnnounce.getImage(), 
+	Announce _announce = announceDao.save(new Announce(seller, theAnnounce.getSeller(), theAnnounce.getImage(), 
 			theAnnounce.getDescription(), theAnnounce.getNote(), theAnnounce.getPostDate(), theAnnounce.getPrice(), theAnnounce.getCharge(),
 			theAnnounce.getPieceName(), theAnnounce.getModel(), theAnnounce.getYear(), theAnnounce.getBrand(), theAnnounce.getCylinder()));
+	
+	
+
+	
+	System.out.println(_announce);
+	System.out.println(seller);
+	
 		return  _announce;
 	}
 	
@@ -70,7 +85,7 @@ public class AnnounceController {
 		return allAnnounces;
 	}
 	
-	@GetMapping("/announces/id/{id}")
+	@GetMapping("/announces/{id}")
 	public Announce oneAnnounce(@PathVariable("id") Long id) {
 		return this.announceDao.findById(id).get();
 	}

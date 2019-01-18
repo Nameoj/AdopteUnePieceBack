@@ -2,9 +2,12 @@ package fr.adopteunepiece.adope_une_piece.entities;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -44,14 +47,19 @@ public class Announce {
 	@Column(name="active")
 	private Boolean active;
 	
+	@ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "seller_id")
+	private Seller sellman;
+	
 	public Announce() {
 		
 	}
 	
 	
 
-	public Announce(String seller, String image, String description, String note,
+	public Announce(Seller sellman, String seller, String image, String description, String note,
 			String postDate, Double price, Double charge, String pieceName, String model, String year, String brand, String cylinder) {
+		this.sellman = sellman;
 		this.seller = seller;
 		this.image = image;
 		this.description = description;
@@ -65,6 +73,7 @@ public class Announce {
 		this.brand = brand;
 		this.cylinder = cylinder;
 		this.active=true;
+		
 	}
 
 
@@ -230,6 +239,18 @@ public class Announce {
 
 	public void setActive(Boolean active) {
 		this.active = active;
+	}
+
+	
+
+	public Seller getSellman() {
+		return sellman;
+	}
+
+
+
+	public void setSellman(Seller sellman) {
+		this.sellman = sellman;
 	}
 
 
