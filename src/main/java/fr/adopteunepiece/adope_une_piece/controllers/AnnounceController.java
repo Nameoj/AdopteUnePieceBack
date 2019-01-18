@@ -1,5 +1,6 @@
 package fr.adopteunepiece.adope_une_piece.controllers;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,15 +43,10 @@ public class AnnounceController {
 	Announce _announce = announceDao.save(new Announce(seller, theAnnounce.getSeller(), theAnnounce.getImage(), 
 			theAnnounce.getDescription(), theAnnounce.getNote(), theAnnounce.getPostDate(), theAnnounce.getPrice(), theAnnounce.getCharge(),
 			theAnnounce.getPieceName(), theAnnounce.getModel(), theAnnounce.getYear(), theAnnounce.getBrand(), theAnnounce.getCylinder()));
-	
-	
 
-	
-	System.out.println(_announce);
-	System.out.println(seller);
-	
 		return  _announce;
 	}
+
 	
 	@PutMapping("/announces/{id}")
 	public ResponseEntity<Object> updateAnnounce(@PathVariable("id") Long id) {
@@ -81,26 +77,41 @@ public class AnnounceController {
 
 	@GetMapping("/announces")
 	public List<Announce> allAnnounces(){
-		List<Announce> allAnnounces=this.announceDao.findAll();
-		return allAnnounces;
-	}
+		List<Announce> listAnnouncesValide = new ArrayList<Announce>();
+
+		List<Announce> listAnnounces = announceDao.findAll();
+		
+		for(Announce announce : listAnnounces) {
+			if (announce.getActive()== true) {
+				listAnnouncesValide.add(announce);
+				}
+			}
+		return listAnnouncesValide;
+		}
 	
 	@GetMapping("/announces/{id}")
 	public Announce oneAnnounce(@PathVariable("id") Long id) {
 		return this.announceDao.findById(id).get();
 	}
 	
-	@GetMapping("/announces/delete/{id}")
+	@GetMapping("/deleteannounces/{id}")
 	public void deleteAnnounce(@PathVariable("id") Long id) {
 		Announce _announce=this.announceDao.findById(id).get();
 		_announce.setActive(false);
 		announceDao.save(_announce);
-	}
-	
+		}
+
 	@GetMapping("/announces/seller/{seller}")
 	public List<Announce> announcesBySeller(@PathVariable("seller") String seller){
 		List<Announce> announcesBySeller=this.announceDao.findBySeller(seller);
-		return announcesBySeller;
+		List<Announce> listAnnoncesSellerValides = new ArrayList<Announce>();
+
+		for(Announce announce :announcesBySeller) {
+			if (announce.getActive()== true) {
+				listAnnoncesSellerValides.add(announce);
+				}
+			}
+
+		return listAnnoncesSellerValides;
 	}
-	
 }
