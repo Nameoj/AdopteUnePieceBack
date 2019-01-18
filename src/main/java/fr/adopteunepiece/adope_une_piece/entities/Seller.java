@@ -3,6 +3,7 @@ package fr.adopteunepiece.adope_une_piece.entities;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -12,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -44,6 +46,9 @@ public class Seller extends User {
     	joinColumns = @JoinColumn(name = "user_id"), 
     	inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
+    
+    @OneToMany(mappedBy="sellman", cascade = CascadeType.ALL )
+    private Set<Announce> announces;
 	
 	public Seller () {}
 
@@ -63,6 +68,8 @@ public class Seller extends User {
 		this.prenomG = prenomG;
 		this.telephoneG = telephoneG;
 		this.active = true;
+		this.announces= new HashSet<Announce>();
+		
 	}
 
 	public Long getId() {
@@ -175,7 +182,17 @@ public class Seller extends User {
 
 	public void setRoles(Set<Role> roles) {
 		this.roles = roles;
-	}	
+	}
+
+	public Set<Announce> getAnnounces() {
+		return announces;
+	}
+
+	public void setAnnounces(Set<Announce> announces) {
+ 	this.announces = announces;
+	}
+	
+	
 
 }
 
