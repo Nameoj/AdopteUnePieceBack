@@ -1,5 +1,6 @@
 package fr.adopteunepiece.adope_une_piece.controllers;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import fr.adopteunepiece.adope_une_piece.entities.Announce;
+import fr.adopteunepiece.adope_une_piece.entities.Seller;
 import fr.adopteunepiece.adope_une_piece.repositories.AnnounceDao;
 
 @CrossOrigin(origins = "http://localhost:4200")
@@ -29,13 +31,13 @@ public class AnnounceController {
 	// add mapping for POST custommer add a new customer
 	@PostMapping("/announces/postAnnounce")
 	public Announce addAnnounce(@RequestBody Announce theAnnounce) {
-	
-	theAnnounce.setId(0);
-	Announce _announce = announceDao.save(new Announce(theAnnounce.getSeller(), theAnnounce.getImage(), 
-			theAnnounce.getDescription(), theAnnounce.getNote(), theAnnounce.getPostDate(), theAnnounce.getPrice(), theAnnounce.getCharge(),
-			theAnnounce.getPieceName(), theAnnounce.getModel(), theAnnounce.getYear(), theAnnounce.getBrand(), theAnnounce.getCylinder()));
-		return  _announce;
-	}
+
+		theAnnounce.setId(0);
+		Announce _announce = announceDao.save(new Announce(theAnnounce.getSeller(), theAnnounce.getImage(), 
+		theAnnounce.getDescription(), theAnnounce.getNote(), theAnnounce.getPostDate(), theAnnounce.getPrice(), theAnnounce.getCharge(),
+		theAnnounce.getPieceName(), theAnnounce.getModel(), theAnnounce.getYear(), theAnnounce.getBrand(), theAnnounce.getCylinder()));
+		return _announce;
+		}
 	
 	@PutMapping("/announces/{id}")
 	public ResponseEntity<Object> updateAnnounce(@PathVariable("id") Long id) {
@@ -66,26 +68,41 @@ public class AnnounceController {
 
 	@GetMapping("/announces")
 	public List<Announce> allAnnounces(){
-		List<Announce> allAnnounces=this.announceDao.findAll();
-		return allAnnounces;
-	}
+		List<Announce> listAnnouncesValide = new ArrayList<Announce>();
+
+		List<Announce> listAnnounces = announceDao.findAll();
+		
+		for(Announce announce : listAnnounces) {
+			if (announce.getActive()== true) {
+				listAnnouncesValide.add(announce);
+				}
+			}
+		return listAnnouncesValide;
+		}
 	
 	@GetMapping("/announces/id/{id}")
 	public Announce oneAnnounce(@PathVariable("id") Long id) {
 		return this.announceDao.findById(id).get();
 	}
 	
-	@GetMapping("/announces/delete/{id}")
+	@GetMapping("/deleteannounces/{id}")
 	public void deleteAnnounce(@PathVariable("id") Long id) {
 		Announce _announce=this.announceDao.findById(id).get();
 		_announce.setActive(false);
 		announceDao.save(_announce);
-	}
-	
+		}
+
 	@GetMapping("/announces/seller/{seller}")
 	public List<Announce> announcesBySeller(@PathVariable("seller") String seller){
 		List<Announce> announcesBySeller=this.announceDao.findBySeller(seller);
-		return announcesBySeller;
+		List<Announce> listAnnoncesSellerValides = new ArrayList<Announce>();
+
+		for(Announce announce :announcesBySeller) {
+			if (announce.getActive()== true) {
+				listAnnoncesSellerValides.add(announce);
+				}
+			}
+
+		return listAnnoncesSellerValides;
 	}
-	
 }
