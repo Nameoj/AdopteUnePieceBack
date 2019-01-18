@@ -10,6 +10,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
+
 @Entity
 @Table(name="announce")
 public class Announce {
@@ -49,6 +52,7 @@ public class Announce {
 	
 	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "seller_id")
+	@JsonProperty(access=Access.WRITE_ONLY)
 	private Seller sellman;
 	
 	public Announce() {
