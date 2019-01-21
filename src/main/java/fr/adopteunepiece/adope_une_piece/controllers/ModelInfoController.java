@@ -3,6 +3,7 @@ package fr.adopteunepiece.adope_une_piece.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,6 +17,8 @@ import fr.adopteunepiece.adope_une_piece.entities.MotoModelInfo;
 import fr.adopteunepiece.adope_une_piece.repositories.MotoModelInfoRepository;
 import fr.adopteunepiece.adope_une_piece.repositories.MotoModelRepository;
 
+
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/api/modelinfo")
 public class ModelInfoController {

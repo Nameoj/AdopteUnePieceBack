@@ -15,27 +15,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 
-@Embeddable
-public class MotoModelInfoKey {
-	@Column 
-	String motoCylinder;
-	@Column 
-	String motoYear;
-	public String getMotoCylinder() {
-		return motoCylinder;
-	}
-	public void setMotoCylinder(String motoCylinder) {
-		this.motoCylinder = motoCylinder;
-	}
-	public String getMotoYear() {
-		return motoYear;
-	}
-	public void setMotoYear(String motoYear) {
-		this.motoYear = motoYear;
-	}
-	
-	
-}
 @Entity
 @Table
 public class MotoModelInfo {

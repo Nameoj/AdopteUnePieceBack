@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,6 +19,8 @@ import fr.adopteunepiece.adope_une_piece.entities.MotoBrand;
 import fr.adopteunepiece.adope_une_piece.entities.MotoModel;
 import fr.adopteunepiece.adope_une_piece.repositories.MotoModelRepository;
 
+
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/api/model")
 public class ModelController {
@@ -36,6 +39,12 @@ public class ModelController {
 		List<MotoModel> allModels = this.modelRepository.findAll();
 		return allModels;
 	}
+	
+//	@GetMapping("/get/{motoBrand}")
+//	public List<MotoModel> modelsByBrand(@PathVariable("motoBrand") MotoBrand motoBrand){
+//		List<MotoModel> modelsByBrand = this.modelRepository.findByMotoBrand(motoBrand);
+//		return modelsByBrand;
+//	}
 	
 	@PutMapping("/put/{modelName}")
 	public MotoModel updateModel(@PathVariable("modelName") String modelName, @RequestBody MotoModel motoModel) {
