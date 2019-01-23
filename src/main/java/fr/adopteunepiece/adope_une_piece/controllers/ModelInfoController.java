@@ -38,6 +38,12 @@ public class ModelInfoController {
 		return allInfoModels;
 	}
 	
+	@GetMapping("/get/{model}")
+	public List<MotoModelInfo> allModel(@PathVariable("model") MotoModel motoModel){
+		List<MotoModelInfo> allInfoModels = this.modelInfoRepository.findByMotoModel(motoModel);
+		return allInfoModels;
+	}
+	
 	@PutMapping("/put/{modelInfoId}")
 	public MotoModelInfo updateModel(@PathVariable("modelInfoId") Long id, @RequestBody MotoModelInfo motoModelInfo) {
 		MotoModelInfo _motoModel = modelInfoRepository.findById(id).get();
