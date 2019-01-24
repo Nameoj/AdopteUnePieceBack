@@ -46,7 +46,7 @@ public class AnnounceController {
 
 		return  _announce;
 	}
-
+	
 	
 	@PutMapping("/announces/{id}")
 	public ResponseEntity<Object> updateAnnounce(@PathVariable("id") Long id) {
@@ -93,6 +93,17 @@ public class AnnounceController {
 	public Announce oneAnnounce(@PathVariable("id") Long id) {
 		return this.announceDao.findById(id).get();
 	}
+	
+	@GetMapping("/announces/model/{model}/{cylinder}/{year}")
+	public List<Announce> getAnnouncesByModel(@PathVariable("model") String model,@PathVariable("year") String year,@PathVariable("cylinder") String cylinder) {
+		return this.announceDao.findByModelAndYearAndCylinder(model, year, cylinder);
+	}
+	
+//	@GetMapping("/announces/any/{find}")
+//	public List<Announce> getAnnouncesByAnyMean(){
+//		return this.announceDao.findByModelOrBrand
+//	}
+	
 	
 	@GetMapping("/deleteannounces/{id}")
 	public void deleteAnnounce(@PathVariable("id") Long id) {
