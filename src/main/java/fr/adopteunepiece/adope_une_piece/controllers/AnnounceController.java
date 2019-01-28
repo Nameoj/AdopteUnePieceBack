@@ -95,8 +95,18 @@ public class AnnounceController {
 	}
 	
 	@GetMapping("/announces/model/{model}/{cylinder}/{year}")
-	public List<Announce> getAnnouncesByModel(@PathVariable("model") String model,@PathVariable("year") String year,@PathVariable("cylinder") String cylinder) {
-		return this.announceDao.findByModelAndYearAndCylinder(model, year, cylinder);
+	public List<Announce> getAnnouncesByModel(@PathVariable("model") String model,@PathVariable("year") String year,
+											  @PathVariable("cylinder") String cylinder) {
+		
+		List<Announce>  listAnnouncesByModel = this.announceDao.findByModelAndYearAndCylinder(model, year, cylinder);
+		List<Announce> listAnnoncesByModelValides = new ArrayList<Announce>();
+		
+		for(Announce announce :listAnnouncesByModel) {
+			if (announce.getActive()== true) {
+				listAnnoncesByModelValides.add(announce);
+				}
+			}
+		return listAnnoncesByModelValides;
 	}
 	
 //	@GetMapping("/announces/any/{find}")
