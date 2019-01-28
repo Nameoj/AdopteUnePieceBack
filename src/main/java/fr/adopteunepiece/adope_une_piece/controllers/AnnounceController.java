@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 import fr.adopteunepiece.adope_une_piece.entities.Announce;
 import fr.adopteunepiece.adope_une_piece.entities.Seller;
 import fr.adopteunepiece.adope_une_piece.repositories.AnnounceDao;
-import fr.adopteunepiece.adope_une_piece.repositories.BuyerRepository;
 import fr.adopteunepiece.adope_une_piece.repositories.SellerRepository;
 
 @CrossOrigin(origins = "http://localhost:4200")
@@ -108,12 +107,6 @@ public class AnnounceController {
 			}
 		return listAnnoncesByModelValides;
 	}
-	
-//	@GetMapping("/announces/any/{find}")
-//	public List<Announce> getAnnouncesByAnyMean(){
-//		return this.announceDao.findByModelOrBrand
-//	}
-	
 	
 	@GetMapping("/deleteannounces/{id}")
 	public void deleteAnnounce(@PathVariable("id") Long id) {

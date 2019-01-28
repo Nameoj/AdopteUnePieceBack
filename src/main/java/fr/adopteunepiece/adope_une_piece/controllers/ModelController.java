@@ -40,11 +40,6 @@ public class ModelController {
 		return allModels;
 	}
 	
-//	@GetMapping("/get/{motoBrand}")
-//	public List<MotoModel> modelsByBrand(@PathVariable("motoBrand") MotoBrand motoBrand){
-//		List<MotoModel> modelsByBrand = this.modelRepository.findByMotoBrand(motoBrand);
-//		return modelsByBrand;
-//	}
 	
 	@PutMapping("/put/{modelName}")
 	public MotoModel updateModel(@PathVariable("modelName") String modelName, @RequestBody MotoModel motoModel) {

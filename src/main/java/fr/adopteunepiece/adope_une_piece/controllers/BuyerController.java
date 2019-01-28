@@ -89,9 +89,6 @@ public class BuyerController {
 		}
 		
 		theBuyer.setId(0L);
-	//	User _buyer = buyerDao.save(new User(theBuyer.getEmail(), theBuyer.getPassword(), theBuyer.getCivilite(), theBuyer.getPrenom(), 
-	//			theBuyer.getNom(), theBuyer.getTelephone(), theBuyer.getAdresse1(), theBuyer.getAdresse2(), 
-	//			theBuyer.getCodepostal(), theBuyer.getVille(), theBuyer.getActive()));
 		
 		return new ResponseEntity<>(u, HttpStatus.OK);
 	}
@@ -105,39 +102,12 @@ public class BuyerController {
 			return new ResponseEntity<>( HttpStatus.CONFLICT);
 		}
 		
-		// Creating user's account
-		//User user = new User(signUpRequest.getName(), signUpRequest.getUsername(), signUpRequest.getEmail(),
-				//encoder.encode(signUpRequest.getPassword()));
 		
 		theBuyer.setId(0L);
 		Buyer _buyer = new Buyer(theBuyer.getUsername(), encoder.encode(theBuyer.getPassword()), theBuyer.getEmail(),theBuyer.getCivilite(), theBuyer.getPrenom(), 
 				theBuyer.getNom(), theBuyer.getTelephone(), theBuyer.getAdresse1(), theBuyer.getAdresse2(), 
 				theBuyer.getCodepostal(), theBuyer.getVille());
- 
-//		Set<Role> strRoles = theBuyer.getRoles();
-//		Set<Role> roles = new HashSet<>();
-// 
-//		strRoles.forEach(role -> {
-//			switch (role) {
-//			case "admin":
-//				Role adminRole = roleRepository.findByName(RoleName.ROLE_ADMIN)
-//						.orElseThrow(() -> new RuntimeException("Fail! -> Cause: User Role not find."));
-//				roles.add(adminRole);
-// 
-//				break;
-//			case "seller":
-//				Role sellerRole = roleRepository.findByName(RoleName.ROLE_SELLER)
-//						.orElseThrow(() -> new RuntimeException("Fail! -> Cause: User Role not find."));
-//				roles.add(sellerRole);
-// 
-//				break;
-//			default:
-//				Role buyerRole = roleRepository.findByName(RoleName.ROLE_BUYER)
-//						.orElseThrow(() -> new RuntimeException("Fail! -> Cause: User Role not find."));
-//				roles.add(buyerRole);
-//			}
-//		});
-		
+ 		
 		Set<Role> strRoles;
 		
 		if (theBuyer.getNom().equals("theteamadopteunepiece")) {
