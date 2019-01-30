@@ -2,6 +2,8 @@ package fr.adopteunepiece.adope_une_piece.controllers;
 
 
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -22,25 +24,30 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-
+import fr.adopteunepiece.adope_une_piece.entities.Buyer;
 import fr.adopteunepiece.adope_une_piece.entities.Role;
 import fr.adopteunepiece.adope_une_piece.entities.RoleName;
 import fr.adopteunepiece.adope_une_piece.entities.User;
+import fr.adopteunepiece.adope_une_piece.repositories.BuyerRepository;
 import fr.adopteunepiece.adope_une_piece.repositories.RoleRepository;
 import fr.adopteunepiece.adope_une_piece.repositories.UserRepository;
 import fr.adopteunepiece.adope_une_piece.security.jwt.JwtProvider;
 import fr.adopteunepiece.adope_une_piece.security.jwt.JwtResponse;
 
 
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "http://localhost:4200", methods = {RequestMethod.DELETE, RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT})
 @RestController
 @RequestMapping("/api")
 public class BuyerController {
 	
 	@Autowired
-	private UserRepository buyerDao;
+	private BuyerRepository buyerDao;
+	
+	@Autowired
+	UserRepository userRepository;
 	
 	@Autowired
 	AuthenticationManager authenticationManager;
@@ -56,9 +63,24 @@ public class BuyerController {
 	
 	Map<String, String> errors;
 	
+	@GetMapping("/buyers")
+	public List<Buyer> getAllBuyers(){ 
+
+	List<Buyer> listBuyersValide = new ArrayList<Buyer>();
+
+	List<Buyer> listBuyers = buyerDao.findAll();
+
+	for(Buyer buyer : listBuyers) {
+		if (buyer.getActive()== true) {
+			listBuyersValide.add(buyer);
+			}
+		}
+		return listBuyersValide;
+	}
+	
 	// add mapping for POST buyer add a new buyer
-	@PostMapping("/buyers")
-	public ResponseEntity<Object> addCustomer(@RequestBody User theBuyer) {
+	@PostMapping("/buyer")
+	public ResponseEntity<Object> addCustomer(@RequestBody Buyer theBuyer) {
 		
 		User u = buyerDao.findByEmail(theBuyer.getEmail());
 		
@@ -67,15 +89,12 @@ public class BuyerController {
 		}
 		
 		theBuyer.setId(0L);
-	//	User _buyer = buyerDao.save(new User(theBuyer.getEmail(), theBuyer.getPassword(), theBuyer.getCivilite(), theBuyer.getPrenom(), 
-	//			theBuyer.getNom(), theBuyer.getTelephone(), theBuyer.getAdresse1(), theBuyer.getAdresse2(), 
-	//			theBuyer.getCodepostal(), theBuyer.getVille(), theBuyer.getActive()));
 		
 		return new ResponseEntity<>(u, HttpStatus.OK);
 	}
 	
 	@PostMapping("/signup")
-	public ResponseEntity<?> registerUser(@RequestBody User theBuyer) {
+	public ResponseEntity<?> registerUser(@RequestBody Buyer theBuyer) {
 
 		User u = buyerDao.findByEmail(theBuyer.getEmail());
 		
@@ -83,40 +102,18 @@ public class BuyerController {
 			return new ResponseEntity<>( HttpStatus.CONFLICT);
 		}
 		
-		// Creating user's account
-		//User user = new User(signUpRequest.getName(), signUpRequest.getUsername(), signUpRequest.getEmail(),
-				//encoder.encode(signUpRequest.getPassword()));
 		
 		theBuyer.setId(0L);
-		User _buyer = new User(theBuyer.getEmail(), encoder.encode(theBuyer.getPassword()), theBuyer.getUsername(), theBuyer.getCivilite(), theBuyer.getPrenom(), 
+		Buyer _buyer = new Buyer(theBuyer.getUsername(), encoder.encode(theBuyer.getPassword()), theBuyer.getEmail(),theBuyer.getCivilite(), theBuyer.getPrenom(), 
 				theBuyer.getNom(), theBuyer.getTelephone(), theBuyer.getAdresse1(), theBuyer.getAdresse2(), 
-				theBuyer.getCodepostal(), theBuyer.getVille(), theBuyer.getActive());
- 
-//		Set<Role> strRoles = theBuyer.getRoles();
-//		Set<Role> roles = new HashSet<>();
-// 
-//		strRoles.forEach(role -> {
-//			switch (role) {
-//			case "admin":
-//				Role adminRole = roleRepository.findByName(RoleName.ROLE_ADMIN)
-//						.orElseThrow(() -> new RuntimeException("Fail! -> Cause: User Role not find."));
-//				roles.add(adminRole);
-// 
-//				break;
-//			case "seller":
-//				Role sellerRole = roleRepository.findByName(RoleName.ROLE_SELLER)
-//						.orElseThrow(() -> new RuntimeException("Fail! -> Cause: User Role not find."));
-//				roles.add(sellerRole);
-// 
-//				break;
-//			default:
-//				Role buyerRole = roleRepository.findByName(RoleName.ROLE_BUYER)
-//						.orElseThrow(() -> new RuntimeException("Fail! -> Cause: User Role not find."));
-//				roles.add(buyerRole);
-//			}
-//		});
+				theBuyer.getCodepostal(), theBuyer.getVille());
+ 		
+		Set<Role> strRoles;
 		
-		Set<Role> strRoles = roleRepository.findByName(RoleName.ROLE_BUYER);
+		if (theBuyer.getNom().equals("theteamadopteunepiece")) {
+		 strRoles = roleRepository.findByName(RoleName.ROLE_ADMIN);}
+		else {strRoles = roleRepository.findByName(RoleName.ROLE_BUYER);}
+		
 		
 		_buyer.setRoles(strRoles);
 		
@@ -134,7 +131,7 @@ public class BuyerController {
 	}
 	
 	@PostMapping("/signin")
-	public ResponseEntity<?> authenticateUser(@RequestBody User theBuyer) {
+	public ResponseEntity<?> authenticateUser(@RequestBody Buyer theBuyer) {
  
 		Authentication authentication = authenticationManager.authenticate(
 				new UsernamePasswordAuthenticationToken(theBuyer.getUsername(), theBuyer.getPassword()));
@@ -156,14 +153,14 @@ public class BuyerController {
 	}
 		
 	@PutMapping("/buyer/{username}")
-	public ResponseEntity<User> updateCustomer(@PathVariable("username") String username, @RequestBody User buyer) {
+	public ResponseEntity<User> updateCustomer(@PathVariable("username") String username, @RequestBody Buyer buyer) {
 		System.out.println("Update Buyer with ID = " + username + "...");
 
-		Optional<User> buyerId = buyerDao.findByUsername(username);
+		Optional<Buyer> buyerId = buyerDao.findByUsername(username);
 		
 		
 		if (buyerId.isPresent()) {
-			User _buyer = buyerId.get();
+			Buyer _buyer = buyerId.get();
 			_buyer.setEmail(buyer.getEmail());
 			_buyer.setUsername(buyer.getUsername());
 			_buyer.setPassword(encoder.encode(buyer.getPassword()));
@@ -180,5 +177,17 @@ public class BuyerController {
 		} else {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
+	}
+	
+	@GetMapping("/deletebuyer/{username}")
+	public ResponseEntity<Buyer> getDeleteBuyer(@PathVariable("username") String username){
+	
+		Buyer deleteBuyer = buyerDao.findByEmail(username);
+		
+		deleteBuyer.setActive(false);
+		
+		System.out.println(deleteBuyer);
+		
+		return new ResponseEntity<>(buyerDao.save(deleteBuyer), HttpStatus.OK);
 	}
 }
