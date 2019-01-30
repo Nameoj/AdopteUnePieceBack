@@ -114,6 +114,14 @@ public class AnnounceController {
 		_announce.setActive(false);
 		announceDao.save(_announce);
 		}
+	
+	@GetMapping("/undeleteannounces/{id}")
+	public void undeleteAnnounce(@PathVariable("id") Long id) {
+		Announce _announce=this.announceDao.findById(id).get();
+		_announce.setActive(true);
+		announceDao.save(_announce);
+		}
+	
 
 	@GetMapping("/announces/seller/{seller}")
 	public List<Announce> announcesBySeller(@PathVariable("seller") String seller){
