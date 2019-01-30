@@ -10,15 +10,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import fr.adopteunepiece.adope_une_piece.entities.MotoModel;
 import fr.adopteunepiece.adope_une_piece.entities.MotoModelInfo;
 import fr.adopteunepiece.adope_une_piece.repositories.MotoModelInfoRepository;
-import fr.adopteunepiece.adope_une_piece.repositories.MotoModelRepository;
 
 
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "http://localhost:4200", methods = {RequestMethod.DELETE, RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT})
 @RestController
 @RequestMapping("/api/modelinfo")
 public class ModelInfoController {

@@ -1,12 +1,8 @@
 package fr.adopteunepiece.adope_une_piece.payload;
-import javax.persistence.*;
 
-@Entity
-@Table(name="upload")
+
 public class UploadFileResponse {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "userId")
+
     private String fileName;
     private String fileDownloadUri;
     private String fileType;
